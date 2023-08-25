@@ -1,11 +1,13 @@
 from flask import Flask, render_template
+from datetime import datetime
 
 app = Flask(__name__)
 
 
 @app.route("/")
 def home():
-    data = 'hello from backend'
+    time = datetime.now()
+    data = time
     return render_template('index.html', data=data)
 
 
