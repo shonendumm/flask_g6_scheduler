@@ -1,0 +1,34 @@
+<html>
+  <head>
+    <script src="https://gw.alipayobjects.com/os/lib/antv/g6/4.3.11/dist/g6.min.js"></script>
+    <title>Flask Tutorial</title>
+  </head>
+  <body>
+    <h1>{{ data }} hi</h1>
+    <!-- <script src="{{ url_for('static', filename='graph_data.json') }}" type=application/json></script> -->
+
+    <div id="mountNode"></div>
+
+    <script>
+      const main = async () => {
+        try {
+          const response = await fetch("/static/graph_data.json");
+          const graphdata = await response.json();
+
+          // Instantiate the Graph
+          const graph = new G6.Graph({
+            container: "mountNode", // String | HTMLElement, required, the id of DOM element or an HTML node
+            width: 800, // Number, required, the width of the graph
+            height: 500, // Number, required, the height of the graph
+          });
+
+          graph.data(graphdata); // Load the data defined in Step 2
+          graph.render(); // Render the graph
+        } catch (error) {
+          console.log(error);
+        }
+      };
+      main();
+    </script>
+  </body>
+</html>
