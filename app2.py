@@ -4,19 +4,24 @@ from flask_apscheduler import APScheduler
 import time
 import logging
 
-logger = logging.basicConfig(level=logging.INFO)
+logger = logging.basicConfig(level=logging.INFO, format='%(asctime)s||%(levelname)s||%(funcName)s||%(message)s')
 logger = logging.getLogger(__name__)
+
+# set configuration values
+class Config:
+    SCHEDULER_API_ENABLED = True
 
 app = Flask(__name__)
 # Configure the logger for the Flask app
 app.logger.setLevel(logging.INFO)  # Set the desired level
-
+app.config.from_object(Config())
 
 # initialize scheduler
 scheduler = APScheduler()
 # if you don't wanna use a config, you can set options here:
-scheduler.api_enabled = True
+# scheduler.api_enabled = True
 scheduler.init_app(app)
+scheduler.start()
 
 
 with app.app_context() as g:
@@ -26,7 +31,7 @@ with app.app_context() as g:
 
     def fetch_data():
         # Replace with your data-fetching logic
-        time.sleep(20) # simulate time to get data
+        # time.sleep(20) # simulate time to get data
         g.data = f"Data: {time.strftime('%Y-%m-%d %H:%M:%S')}"
 
 
@@ -40,7 +45,6 @@ with app.app_context() as g:
     fetch_data()
 
 
-scheduler.start()
 
 @app.route("/")
 def home():
@@ -50,5 +54,6 @@ def home():
 if __name__ == "__main__":
     try:
         app.run()
+        
     except:
         scheduler.shutdown()  # Properly shutdown the scheduler
