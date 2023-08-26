@@ -36,7 +36,7 @@ with app.app_context() as g:
     def generate_data():
         while True:
             # need the "data:" keyword because frontend is calling .data as the key
-            # also need \n\n or else it won't display the text
+            # also need \n\n or else it won't display the text. The double newline characters are used to delimit individual messages in the SSE stream. Each SSE message must be followed by two newline characters to indicate the end of the message. 
             yield f"data: {g.data}\n\n"
             time.sleep(10)  # Adjust the interval as needed
 
