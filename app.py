@@ -4,7 +4,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 import time
 import logging
 
-logger = logging.basicConfig(level=logging.INFO, format='%(asctime)s-%(levelname)s-%(funcName)s-%(message)s')
+logger = logging.basicConfig(level=logging.INFO, format='%(asctime)s|%(levelname)s|%(funcName)s|%(message)s')
 logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
@@ -21,10 +21,10 @@ with app.app_context() as g:
     def fetch_data():
         # Replace with your data-fetching logic
         # time.sleep(20) # simulate time to get data
-        g.data = f"Data: {time.strftime('%Y-%m-%d %H:%M:%S')}"
+        g.data = f"date is {time.strftime('%Y-%m-%d %H:%M:%S')}"
 
     def schedule_fetch_data():
-        scheduler.add_job(fetch_data, 'interval', seconds=30)
+        scheduler.add_job(fetch_data, 'interval', seconds=5)
         scheduler.start()
 
     # Start fetching data immediately upon starting the app
@@ -34,11 +34,10 @@ with app.app_context() as g:
     schedule_fetch_data()
 
     def generate_data():
-        count = 0
         while True:
-            yield f"data: Update {count}\n\n"
-            count += 1
-            time.sleep(5)  # Adjust the interval as needed
+            # need the "data:" keyword because frontend is calling .data as the key
+            yield f"data: {g.data}\n\n"
+            time.sleep(10)  # Adjust the interval as needed
 
 
 @app.route("/")

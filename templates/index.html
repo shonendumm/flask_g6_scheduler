@@ -4,7 +4,6 @@
     <title>Flask Tutorial</title>
   </head>
   <body>
-    <!-- <script src="{{ url_for('static', filename='graph_data.json') }}" type=application/json></script> -->
     <h1>{{ data }} </h1>
     <div id="updates"></div>
 
@@ -15,7 +14,7 @@
     const eventSource = new EventSource('/data-stream');
 
     eventSource.onmessage = (event) => {
-        updatesElement.innerHTML += event.data + '<br>';
+        updatesElement.innerHTML = event.data + '<br>';
     };
 
     eventSource.onerror = (error) => {
