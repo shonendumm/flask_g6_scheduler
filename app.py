@@ -39,6 +39,8 @@ def home():
     return render_template('index.html', data=g.data)
 
 
+
+
 if __name__ == "__main__":
     try:
         app.run()
