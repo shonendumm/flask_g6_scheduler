@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, Response
 from datetime import datetime
 from apscheduler.schedulers.background import BackgroundScheduler
 import time
@@ -33,12 +33,21 @@ with app.app_context() as g:
     # Start the scheduler
     schedule_fetch_data()
 
+    def generate_data():
+        count = 0
+        while True:
+            yield f"data: Update {count}\n\n"
+            count += 1
+            time.sleep(5)  # Adjust the interval as needed
+
 
 @app.route("/")
 def home():
     return render_template('index.html', data=g.data)
 
-
+@app.route('/data-stream')
+def data_stream():
+    return Response(generate_data(), content_type='text/event-stream')
 
 
 if __name__ == "__main__":
