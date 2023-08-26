@@ -1,4 +1,4 @@
-from flask import Flask, render_template, g
+from flask import Flask, render_template
 from datetime import datetime
 from apscheduler.schedulers.background import BackgroundScheduler
 import time
