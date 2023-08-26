@@ -4,7 +4,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 import time
 import logging
 
-logger = logging.basicConfig(level=logging.INFO)
+logger = logging.basicConfig(level=logging.INFO, format='%(asctime)s-%(levelname)s-%(funcName)s-%(message)s')
 logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
