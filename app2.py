@@ -1,6 +1,6 @@
 from flask import Flask, render_template
 from datetime import datetime
-from apscheduler.schedulers.background import BackgroundScheduler
+from flask_apscheduler import APScheduler
 import time
 import logging
 
@@ -11,7 +11,13 @@ app = Flask(__name__)
 # Configure the logger for the Flask app
 app.logger.setLevel(logging.INFO)  # Set the desired level
 
-scheduler = BackgroundScheduler()
+
+# initialize scheduler
+scheduler = APScheduler()
+# if you don't wanna use a config, you can set options here:
+scheduler.api_enabled = True
+scheduler.init_app(app)
+
 
 with app.app_context() as g:
 
@@ -20,19 +26,21 @@ with app.app_context() as g:
 
     def fetch_data():
         # Replace with your data-fetching logic
-        # time.sleep(20) # simulate time to get data
+        time.sleep(20) # simulate time to get data
         g.data = f"Data: {time.strftime('%Y-%m-%d %H:%M:%S')}"
 
-    def schedule_fetch_data():
-        scheduler.add_job(fetch_data, 'interval', seconds=30)
-        scheduler.start()
+
+    # interval example
+    @scheduler.task('interval', id='do_job_1', seconds=30, misfire_grace_time=900)
+    def job1():
+        fetch_data()
+        logger.info('Job 1 executed')
 
     # Start fetching data immediately upon starting the app
     fetch_data()
 
-    # Start the scheduler
-    schedule_fetch_data()
 
+scheduler.start()
 
 @app.route("/")
 def home():
